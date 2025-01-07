@@ -1,8 +1,8 @@
-import { ClientEvents } from "discord.js";
 import { CustomClient } from "bot";
-import fs from "fs/promises";
-import path from "path";
+import { ClientEvents } from "discord.js";
 import process from "node:process";
+import path from "path";
+import { readFilesRecursively } from "./loadFiles";
 
 async function loadEvent(
   client: CustomClient,
@@ -25,28 +25,14 @@ async function loadEvent(
   }
 }
 
-async function loadEventsFromDirectory(
-  client: CustomClient,
-  directoryPath: string,
-): Promise<void> {
-  const files = await fs.readdir(directoryPath, { withFileTypes: true });
-
-  for (const file of files) {
-    const filePath = path.join(directoryPath, file.name);
-    if (file.isDirectory()) {
-      await loadEventsFromDirectory(client, filePath);
-    } else if (file.name.endsWith(".ts") || file.name.endsWith(".js")) {
-      await loadEvent(client, filePath);
-    }
-  }
-}
-
 export default async function handleEvents(
   client: CustomClient,
 ): Promise<void> {
   const foldersPath = path.join(process.cwd(), "src/events");
   try {
-    await loadEventsFromDirectory(client, foldersPath);
+    await readFilesRecursively(foldersPath, (filePath) =>
+      loadEvent(client, filePath),
+    );
     console.log(`Events loaded successfully.`);
   } catch (error) {
     console.error("Failed to load events: ", error);

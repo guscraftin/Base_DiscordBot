@@ -1,8 +1,8 @@
 import CustomButtonInteraction from "interfaces/button";
-import { client } from "../bot";
-import fs from "fs/promises";
-import path from "path";
 import process from "node:process";
+import path from "path";
+import { client } from "../bot";
+import { readFilesRecursively } from "./loadFiles";
 
 function isValidButton(
   button: CustomButtonInteraction,
@@ -25,23 +25,10 @@ async function loadButton(filePath: string): Promise<void> {
   }
 }
 
-async function loadButtonsFromDirectory(directoryPath: string): Promise<void> {
-  const files = await fs.readdir(directoryPath, { withFileTypes: true });
-
-  for (const file of files) {
-    const filePath = path.join(directoryPath, file.name);
-    if (file.isDirectory()) {
-      await loadButtonsFromDirectory(filePath);
-    } else if (file.name.endsWith(".ts") || file.name.endsWith(".js")) {
-      await loadButton(filePath);
-    }
-  }
-}
-
 export default async function handleButtons(): Promise<void> {
   const foldersPath = path.join(process.cwd(), "src/buttons");
   try {
-    await loadButtonsFromDirectory(foldersPath);
+    await readFilesRecursively(foldersPath, loadButton);
     console.log(`Buttons loaded successfully.`);
   } catch (error) {
     console.error("Failed to load buttons: ", error);

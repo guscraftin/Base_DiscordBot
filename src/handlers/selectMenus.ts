@@ -1,8 +1,8 @@
 import CustomStringSelectMenuInteraction from "interfaces/selectMenu";
-import { client } from "../bot";
-import fs from "fs/promises";
-import path from "path";
 import process from "node:process";
+import path from "path";
+import { client } from "../bot";
+import { readFilesRecursively } from "./loadFiles";
 
 function isValidSelectMenu(
   selectMenu: CustomStringSelectMenuInteraction,
@@ -25,25 +25,10 @@ async function loadSelectMenu(filePath: string): Promise<void> {
   }
 }
 
-async function loadSelectMenusFromDirectory(
-  directoryPath: string,
-): Promise<void> {
-  const files = await fs.readdir(directoryPath, { withFileTypes: true });
-
-  for (const file of files) {
-    const filePath = path.join(directoryPath, file.name);
-    if (file.isDirectory()) {
-      await loadSelectMenusFromDirectory(filePath);
-    } else if (file.name.endsWith(".ts") || file.name.endsWith(".js")) {
-      await loadSelectMenu(filePath);
-    }
-  }
-}
-
 export default async function handleSelectMenus(): Promise<void> {
   const foldersPath = path.join(process.cwd(), "src/selectMenus");
   try {
-    await loadSelectMenusFromDirectory(foldersPath);
+    await readFilesRecursively(foldersPath, loadSelectMenu);
     console.log(`SelectMenus loaded successfully.`);
   } catch (error) {
     console.error("Failed to load selectMenus: ", error);

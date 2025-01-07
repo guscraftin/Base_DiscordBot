@@ -1,8 +1,8 @@
 import CustomModalInteraction from "interfaces/modal";
-import { client } from "../bot";
-import fs from "fs/promises";
-import path from "path";
 import process from "node:process";
+import path from "path";
+import { client } from "../bot";
+import { readFilesRecursively } from "./loadFiles";
 
 function isValidModal(
   modal: CustomModalInteraction,
@@ -25,23 +25,10 @@ async function loadModal(filePath: string): Promise<void> {
   }
 }
 
-async function loadModalsFromDirectory(directoryPath: string): Promise<void> {
-  const files = await fs.readdir(directoryPath, { withFileTypes: true });
-
-  for (const file of files) {
-    const filePath = path.join(directoryPath, file.name);
-    if (file.isDirectory()) {
-      await loadModalsFromDirectory(filePath);
-    } else if (file.name.endsWith(".ts") || file.name.endsWith(".js")) {
-      await loadModal(filePath);
-    }
-  }
-}
-
 export default async function handleModals(): Promise<void> {
   const foldersPath = path.join(process.cwd(), "src/modals");
   try {
-    await loadModalsFromDirectory(foldersPath);
+    await readFilesRecursively(foldersPath, loadModal);
     console.log(`Modals loaded successfully.`);
   } catch (error) {
     console.error("Failed to load modals: ", error);

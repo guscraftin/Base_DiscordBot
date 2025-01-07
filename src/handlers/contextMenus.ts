@@ -1,9 +1,9 @@
 import { ContextMenuCommandBuilder } from "discord.js";
 import CustomContextMenuCommandInteraction from "interfaces/contextMenu";
-import { client } from "../bot";
-import fs from "fs/promises";
-import path from "path";
 import process from "node:process";
+import path from "path";
+import { client } from "../bot";
+import { readFilesRecursively } from "./loadFiles";
 
 function isValidContextMenu(
   contextMenu: CustomContextMenuCommandInteraction,
@@ -26,25 +26,10 @@ async function loadContextMenu(filePath: string): Promise<void> {
   }
 }
 
-async function loadContextMenusFromDirectory(
-  directoryPath: string,
-): Promise<void> {
-  const files = await fs.readdir(directoryPath, { withFileTypes: true });
-
-  for (const file of files) {
-    const filePath = path.join(directoryPath, file.name);
-    if (file.isDirectory()) {
-      await loadContextMenusFromDirectory(filePath);
-    } else if (file.name.endsWith(".ts") || file.name.endsWith(".js")) {
-      await loadContextMenu(filePath);
-    }
-  }
-}
-
 export default async function handleContextMenus(): Promise<void> {
   const foldersPath = path.join(process.cwd(), "src/contextMenus");
   try {
-    await loadContextMenusFromDirectory(foldersPath);
+    await readFilesRecursively(foldersPath, loadContextMenu);
     console.log(`ContextMenus loaded successfully.`);
   } catch (error) {
     console.error("Failed to load contextMenus: ", error);

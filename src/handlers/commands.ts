@@ -1,9 +1,9 @@
-import CustomSlashCommandInteraction from "interfaces/command";
 import { SlashCommandBuilder } from "discord.js";
-import { client } from "../bot";
-import fs from "fs/promises";
-import path from "path";
+import CustomSlashCommandInteraction from "interfaces/command";
 import process from "node:process";
+import path from "path";
+import { client } from "../bot";
+import { readFilesRecursively } from "./loadFiles";
 
 function isValidCommand(
   command: CustomSlashCommandInteraction,
@@ -26,23 +26,10 @@ async function loadCommand(filePath: string): Promise<void> {
   }
 }
 
-async function loadCommandsFromDirectory(directoryPath: string): Promise<void> {
-  const files = await fs.readdir(directoryPath, { withFileTypes: true });
-
-  for (const file of files) {
-    const filePath = path.join(directoryPath, file.name);
-    if (file.isDirectory()) {
-      await loadCommandsFromDirectory(filePath);
-    } else if (file.name.endsWith(".ts") || file.name.endsWith(".js")) {
-      await loadCommand(filePath);
-    }
-  }
-}
-
 export default async function handleCommands(): Promise<void> {
   const foldersPath = path.join(process.cwd(), "src/commands");
   try {
-    await loadCommandsFromDirectory(foldersPath);
+    await readFilesRecursively(foldersPath, loadCommand);
     console.log(`Commands loaded successfully.`);
   } catch (error) {
     console.error("Failed to load commands: ", error);
