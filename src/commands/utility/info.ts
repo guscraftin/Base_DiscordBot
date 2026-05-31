@@ -75,6 +75,7 @@ export default {
     .setName("info")
     .setDescription("Display bot information.")
     .setContexts([InteractionContextType.Guild, InteractionContextType.BotDM]),
+  deferOptions: {},
   async execute(
     client: CustomClient,
     interaction: ChatInputCommandInteraction,
