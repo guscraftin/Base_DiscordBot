@@ -28,4 +28,4 @@ This is a basic structure for a typescript discord bot.
 
 ## Starting the bot
 
-- Run the command npm start in the previously cloned folder.
+- Run the command `npm start` in the previously cloned folder.
