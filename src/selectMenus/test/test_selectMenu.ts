@@ -1,4 +1,8 @@
-import { PermissionFlagsBits, StringSelectMenuInteraction } from "discord.js";
+import {
+  MessageFlags,
+  PermissionFlagsBits,
+  StringSelectMenuInteraction,
+} from "discord.js";
 import { CustomClient } from "bot";
 
 export default {
@@ -6,7 +10,7 @@ export default {
   data: {
     name: "test_selectMenu",
   },
-  deferOptions: { ephemeral: true },
+  deferOptions: { flags: MessageFlags.Ephemeral },
   async execute(
     client: CustomClient,
     interaction: StringSelectMenuInteraction,

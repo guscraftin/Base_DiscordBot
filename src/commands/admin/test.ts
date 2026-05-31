@@ -4,6 +4,8 @@ import {
   ButtonStyle,
   ChatInputCommandInteraction,
   EmbedBuilder,
+  InteractionContextType,
+  MessageFlags,
   PermissionFlagsBits,
   SlashCommandBuilder,
   StringSelectMenuBuilder,
@@ -62,8 +64,8 @@ export default {
     .setName("test")
     .setDescription("Allows you to test individual components.")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-    .setDMPermission(false),
-  deferOptions: { ephemeral: true },
+    .setContexts([InteractionContextType.Guild]),
+  deferOptions: { flags: MessageFlags.Ephemeral },
   async execute(
     client: CustomClient,
     interaction: ChatInputCommandInteraction,

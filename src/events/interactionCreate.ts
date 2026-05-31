@@ -10,6 +10,7 @@ import {
   Interaction,
   InteractionDeferReplyOptions,
   InteractionType,
+  MessageFlags,
   ModalSubmitInteraction,
   StringSelectMenuInteraction,
 } from "discord.js";
@@ -99,7 +100,7 @@ async function handleCommandInteraction(
     if (returnPermission) {
       await interaction.reply({
         content: returnPermission,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral 
       });
       return;
     }
@@ -131,7 +132,7 @@ async function handleCommandInteraction(
         const expiredTimestamp = Math.round(expirationTime / 1_000);
         await interaction.reply({
           content: `Please wait, you are currently on cooldown for the command named \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral 
         });
         return;
       }
@@ -169,7 +170,7 @@ async function handleCommandInteraction(
     } else {
       await interaction.reply({
         content: "There was an error while executing this command!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral 
       });
     }
   }
@@ -205,7 +206,7 @@ async function handleButtonInteraction(
     if (returnPermission) {
       await interaction.reply({
         content: returnPermission,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral 
       });
       return;
     }
@@ -236,7 +237,7 @@ async function handleButtonInteraction(
         const expiredTimestamp = Math.round(expirationTime / 1_000);
         await interaction.reply({
           content: `Please wait, you are currently on cooldown for the button named \`${button.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral 
         });
         return;
       }
@@ -256,12 +257,12 @@ async function handleButtonInteraction(
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({
         content: "There was an error while executing this button!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral 
       });
     } else {
       await interaction.reply({
         content: "There was an error while executing this button!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral 
       });
     }
   }
@@ -285,7 +286,7 @@ async function handleModalInteraction(
     if (returnPermission) {
       await interaction.reply({
         content: returnPermission,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -316,7 +317,7 @@ async function handleModalInteraction(
         const expiredTimestamp = Math.round(expirationTime / 1_000);
         await interaction.reply({
           content: `Please wait, you are currently on cooldown for the modal named \`${modal.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
         return;
       }
@@ -336,12 +337,12 @@ async function handleModalInteraction(
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({
         content: "There was an error while executing this modal!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     } else {
       await interaction.reply({
         content: "There was an error while executing this modal!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
   }
@@ -367,7 +368,7 @@ async function handleSelectMenuInteraction(
     if (returnPermission) {
       await interaction.reply({
         content: returnPermission,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -399,7 +400,7 @@ async function handleSelectMenuInteraction(
         const expiredTimestamp = Math.round(expirationTime / 1_000);
         await interaction.reply({
           content: `Please wait, you are currently on cooldown for the selectMenu named \`${selectMenu.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral 
         });
         return;
       }
@@ -422,12 +423,12 @@ async function handleSelectMenuInteraction(
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({
         content: "There was an error while executing this selectMenu!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral 
       });
     } else {
       await interaction.reply({
         content: "There was an error while executing this selectMenu!",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral 
       });
     }
   }

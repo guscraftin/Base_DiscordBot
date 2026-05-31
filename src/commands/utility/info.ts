@@ -1,6 +1,7 @@
 import {
   ChatInputCommandInteraction,
   EmbedBuilder,
+  InteractionContextType,
   SlashCommandBuilder,
   Team,
   User,
@@ -73,8 +74,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("info")
     .setDescription("Display bot information.")
-    .setDMPermission(true),
-  deferOptions: { ephemeral: false },
+    .setContexts([InteractionContextType.Guild, InteractionContextType.BotDM]),
   async execute(
     client: CustomClient,
     interaction: ChatInputCommandInteraction,
